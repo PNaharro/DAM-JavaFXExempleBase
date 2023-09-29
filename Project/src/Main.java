@@ -16,27 +16,31 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
+        // Definir les mides de la finestra
         final int minWidth = 300;
         final int minHeight = 600;
         final int windowWidth = 800;
         final int windowHeight = 600;
-
+      
+        // Carregar les vistes (aquí cal afegir les noves vistes)
         UtilsViews.parentContainer.setStyle("-fx-font: 14 arial;");
         UtilsViews.addView(getClass(), "Desktop", "assets/layout_desktop.fxml");
         UtilsViews.addView(getClass(), "Mobile0", "assets/layout_mobile_0.fxml");
-
+      
         Scene scene = new Scene(UtilsViews.parentContainer);
-        
-        // Listen to window width changes
+      
+        // Observar els canvis de mida (per canviar la vista de Desktop a Mòbil)
         scene.widthProperty().addListener((ChangeListener<? super Number>) new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldWidth, Number newWidth) {
-                _setLayout(newWidth.intValue());
-            }
-        });
+          @Override
+          public void changed(ObservableValue<? extends Number> observable, Number oldWidth, Number newWidth) {
+            _setLayout(newWidth.intValue());
+          }
+      });
+      
 
+        // Iniciar els paràmetres de la finestra
         stage.setScene(scene);
-        stage.setTitle("JavaFX App");
+        stage.setTitle("NintendoDB");
         stage.setMinWidth(minWidth);
         stage.setWidth(windowWidth);
         stage.setMinHeight(minHeight);
@@ -45,9 +49,10 @@ public class Main extends Application {
 
         // Add icon only if not Mac
         if (!System.getProperty("os.name").contains("Mac")) {
-            Image icon = new Image("file:assets/icons/icon.png");
-            stage.getIcons().add(icon);
+        Image icon = new Image("file:assets/icons/icon.png");
+        stage.getIcons().add(icon);
         }
+
     }
 
     private void _setLayout(int width) {
