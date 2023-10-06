@@ -81,7 +81,6 @@ public void loadList() {
     // Carregar la llista amb les dades
     for (int i = 0; i < dades.length(); i++) {
         JSONObject consoleObject = dades.getJSONObject(i);
-        System.out.println("c");
 
         if (consoleObject.has("nom")) {
             
