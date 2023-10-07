@@ -23,16 +23,18 @@ import javafx.scene.layout.VBox;
 public class ControllerMobile0  implements Initializable{
 
     @FXML
-    private VBox yPanel;    
+    private VBox yPanel;
+    @FXML
+    private Label titul;
     
     String opcions[] = { "Personatges", "Jocs", "Consoles" };
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // TODO Auto-generated method stub
+        System.out.println("Init0");
       load();
     } 
-
 
 
     public void load(){
@@ -65,15 +67,65 @@ public class ControllerMobile0  implements Initializable{
                 final String type =  opcions[i];
                 final int index = i;
                 itemTemplate.setOnMouseClicked(event -> {
-                  UtilsViews.setView("Movile1");
+                  titul.setText(type);
+                  //UtilsViews.setView("Mobile1");
+                  yPanel.getChildren().clear();
+                  load_show();
                 });
-                
-                
-                
+
                 yPanel.getChildren().add(itemTemplate);
-             
         }
     }
+     public void load_show(){
+        try {
+            show();
+          } catch (Exception e) {
+            System.out.println("ControllerDesktop: Error showing list.");
+          }
+    }
+
+     public void show() throws Exception {
+      
+      AppData appData = AppData.getInstance();
+
+      // Obtenir les dades de l'opció seleccionada
+      JSONArray dades = appData.getData("Personatges");
+      // Carregar la plantilla
+      URL resource = this.getClass().getResource("assets/template_list_item.fxml");
+
+      // Esborrar la llista actual
+      yPanel.getChildren().clear();
+
+      // Carregar la llista amb les dades
+      for (int i = 0; i < dades.length(); i++) {
+          JSONObject consoleObject = dades.getJSONObject(i);
+
+          if (consoleObject.has("nom")) {
+              
+              String nom = consoleObject.getString("nom");
+              
+              String imatge = "assets/images/" + consoleObject.getString("imatge");
+          
+              FXMLLoader loader = new FXMLLoader(resource);
+              Parent itemTemplate = loader.load();
+              ControllerListItem itemController = loader.getController();
+              itemController.setText(nom);
+              itemController.setImage(imatge);
+              
+              // Defineix el callback que s'executarà quan l'usuari seleccioni un element
+              // (cal passar final perquè es pugui accedir des del callback)
+              
+              yPanel.getChildren().add(itemTemplate);
+              
+          }
+
+        }
+
+     }
+
+
+
+
   void showInfo(String type, int index) {
 
         // Obtenir una referència a l'ojecte AppData que gestiona les dades

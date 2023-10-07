@@ -11,4 +11,8 @@ public class ControllerList {
       // Estableix el contingut del Label
       this.text.setText(text);
     }
+
+    public Label getText() {
+      return text;
+    }
 }
