@@ -26,7 +26,8 @@ public class Main extends Application {
         UtilsViews.parentContainer.setStyle("-fx-font: 14 arial;");
         UtilsViews.addView(getClass(), "Desktop", "assets/layout_desktop.fxml");
         UtilsViews.addView(getClass(), "Mobile0", "assets/layout_mobile_0.fxml");
-      
+        UtilsViews.addView(getClass(), "Mobile1", "assets/layout_mobile_1.fxml");
+     
         Scene scene = new Scene(UtilsViews.parentContainer);
       
         // Observar els canvis de mida (per canviar la vista de Desktop a Mòbil)
