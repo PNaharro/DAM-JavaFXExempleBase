@@ -141,9 +141,9 @@ public void loadList() {
             itemController.setImage("assets/images/" + dades.getString("imatge"));
             itemController.setTitle(dades.getString("nom"));
             switch (type) {
-            case "Consoles": itemController.setText(dades.getString("procesador")+"\n"+dades.getString("data")); break;
-            case "Jocs": itemController.setText(dades.getString("descripcio")); break;
-            case "Personatges": itemController.setText(dades.getString("nom_del_videojoc")); break;
+            case "Consoles": itemController.setText(dades.getString("procesador")+"\n"+dades.getString("data")+"\n"+dades.getInt("venudes")+"\n"+dades.getString("color")); break;
+            case "Jocs": itemController.setText(dades.getString("descripcio")+"\n"+dades.getInt("any")+"\n"+dades.getString("tipus")); break;
+            case "Personatges": itemController.setText(dades.getString("nom_del_videojoc")+"\n"+dades.getString("color")); break;
             }
 
             // Afegeix la informació a la vista
