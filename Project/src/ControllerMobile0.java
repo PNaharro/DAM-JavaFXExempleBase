@@ -3,7 +3,7 @@
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import javax.swing.text.View;
+
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -13,8 +13,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
@@ -26,32 +27,48 @@ public class ControllerMobile0  implements Initializable{
     private VBox yPanel;
     @FXML
     private Label titul;
+    @FXML
+    private Button back;
+    @FXML
+    private AnchorPane info;
+    @FXML
+    private ScrollPane var;
     
+    private String tit;
     String opcions[] = { "Personatges", "Jocs", "Consoles" };
+  
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // TODO Auto-generated method stub
-        System.out.println("Init0");
       load();
     } 
-
-
+     @FXML
+    private void go_back(ActionEvent event) {
+      if (yPanel.isVisible()){
+        titul.setText("Nintendo DB");
+        load();
+      }else{
+          titul.setText(tit);
+          info.getChildren().clear();
+          info.setVisible(false);
+          yPanel.setVisible(true);
+          var.setVisible(true);
+      }
+    }
+     
+      
+    
     public void load(){
         try {
             showList();
           } catch (Exception e) {
-            System.out.println("ControllerDesktop: Error showing list.");
+            System.out.println("ControllerDesktop: Error showing list opc.");
           }
     }
-    public void showList() throws Exception {
 
-      
-        // Obtenir una referència a l'ojecte AppData que gestiona les dades
-        AppData appData = AppData.getInstance();
-    
-       
-        // Carregar la plantilla
+    public void showList() throws Exception {
+        back.setVisible(false);
+        info.setVisible(false);
         URL resource = this.getClass().getResource("assets/listatem.fxml");
     
         // Esborrar la llista actual
@@ -65,31 +82,32 @@ public class ControllerMobile0  implements Initializable{
                 ControllerList itemController = loader.getController();
                 itemController.setText(nom);
                 final String type =  opcions[i];
-                final int index = i;
                 itemTemplate.setOnMouseClicked(event -> {
                   titul.setText(type);
-                  //UtilsViews.setView("Mobile1");
+                  back.setVisible(true);
                   yPanel.getChildren().clear();
-                  load_show();
+                  load_show(type);
+                  return;
                 });
-
                 yPanel.getChildren().add(itemTemplate);
         }
     }
-     public void load_show(){
+     public void load_show(String type){
         try {
-            show();
+            show(type);
           } catch (Exception e) {
             System.out.println("ControllerDesktop: Error showing list.");
           }
-    }
+        } 
 
-     public void show() throws Exception {
+     public void show(String type) throws Exception {
+      tit=type;
       
       AppData appData = AppData.getInstance();
 
       // Obtenir les dades de l'opció seleccionada
-      JSONArray dades = appData.getData("Personatges");
+      JSONArray dades = appData.getData(type);
+      System.out.println(dades);
       // Carregar la plantilla
       URL resource = this.getClass().getResource("assets/template_list_item.fxml");
 
@@ -114,7 +132,12 @@ public class ControllerMobile0  implements Initializable{
               
               // Defineix el callback que s'executarà quan l'usuari seleccioni un element
               // (cal passar final perquè es pugui accedir des del callback)
-              
+              final int index = i;
+                itemTemplate.setOnMouseClicked(event -> {
+                  titul.setText(nom);
+                  info.setVisible(true);
+                  showInfo(type, index);
+                });
               yPanel.getChildren().add(itemTemplate);
               
           }
@@ -125,9 +148,9 @@ public class ControllerMobile0  implements Initializable{
 
 
 
-
   void showInfo(String type, int index) {
-
+        yPanel.setVisible(false);
+        var.setVisible(false);
         // Obtenir una referència a l'ojecte AppData que gestiona les dades
         AppData appData = AppData.getInstance();
       
@@ -135,7 +158,7 @@ public class ControllerMobile0  implements Initializable{
         JSONObject dades = appData.getItemData(type, index);
       
         // Carregar la plantilla
-        URL resource = this.getClass().getResource("assets/template_info_item.fxml");
+        URL resource = this.getClass().getResource("assets/template_info_item_m.fxml");
       
         // Esborrar la informació actual
         //info.getChildren().clear();
@@ -147,28 +170,23 @@ public class ControllerMobile0  implements Initializable{
             itemController.setImage("assets/images/" + dades.getString("imatge"));
             itemController.setTitle(dades.getString("nom"));
             switch (type) {
-            case "Consoles": itemController.setText(dades.getString("procesador")+"\n"+dades.getString("data")); break;
-            case "Jocs": itemController.setText(dades.getString("descripcio")); break;
-            case "Personatges": itemController.setText(dades.getString("nom_del_videojoc")); break;
-            }
+              case "Consoles": itemController.setText(dades.getString("procesador")+"\n"+dades.getString("data")+"\n"+dades.getInt("venudes")+"\n"+dades.getString("color")); break;
+              case "Jocs": itemController.setText(dades.getString("descripcio")+"\n"+dades.getInt("any")+"\n"+dades.getString("tipus")); break;
+              case "Personatges": itemController.setText(dades.getString("nom_del_videojoc")+"\n"+dades.getString("color")); break;
+             }
 
+            info.getChildren().add(itemTemplate);
             // Afegeix la informació a la vista
            // info.getChildren().add(itemTemplate);
             // Estableix que la mida de itemTemplaate s'ajusti a la mida de info
-                AnchorPane.setTopAnchor(itemTemplate, 0.0);
-                AnchorPane.setRightAnchor(itemTemplate, 0.0);
-                AnchorPane.setBottomAnchor(itemTemplate, 0.0);
-                AnchorPane.setLeftAnchor(itemTemplate, 0.0);
+                
 
                 } catch (Exception e) {
                 System.out.println("ControllerDesktop: Error showing info.");
                 System.out.println(e);
                 }
             }
-
-
-
-}
+        }
 
 
     
