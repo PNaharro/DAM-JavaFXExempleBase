@@ -56,7 +56,7 @@ public class Main extends Application {
     }
 
     private void _setLayout(int width) {
-        if (width <= 284) {
+        if (width <= 600) {
             UtilsViews.setView("Mobile0");
         } else {
             UtilsViews.setView("Desktop");
