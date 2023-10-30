@@ -104,45 +104,62 @@ public class ControllerMobile0  implements Initializable{
       tit=type;
       
       AppData appData = AppData.getInstance();
+      
 
-      // Obtenir les dades de l'opció seleccionada
-      JSONArray dades = appData.getData(type);
-      System.out.println(dades);
-      // Carregar la plantilla
-      URL resource = this.getClass().getResource("assets/template_list_item.fxml");
 
-      // Esborrar la llista actual
-      yPanel.getChildren().clear();
+      appData.load(type, (result) -> {
+        if (result == null) {
+          System.out.println("ControllerDesktop: Error loading data.");
+        } else {
+          // Cal afegir el try/catch a la crida de ‘showList’
+          try {
+            JSONArray dades = appData.getData(type);
+            System.out.println(dades);
+            // Carregar la plantilla
+            URL resource = this.getClass().getResource("assets/template_list_item.fxml");
 
-      // Carregar la llista amb les dades
-      for (int i = 0; i < dades.length(); i++) {
-          JSONObject consoleObject = dades.getJSONObject(i);
+            // Esborrar la llista actual
+            yPanel.getChildren().clear();
 
-          if (consoleObject.has("nom")) {
-              
-              String nom = consoleObject.getString("nom");
-              
-              String imatge = "assets/images/" + consoleObject.getString("imatge");
-          
-              FXMLLoader loader = new FXMLLoader(resource);
-              Parent itemTemplate = loader.load();
-              ControllerListItem itemController = loader.getController();
-              itemController.setText(nom);
-              itemController.setImage(imatge);
-              
-              // Defineix el callback que s'executarà quan l'usuari seleccioni un element
-              // (cal passar final perquè es pugui accedir des del callback)
-              final int index = i;
-                itemTemplate.setOnMouseClicked(event -> {
-                  titul.setText(nom);
-                  info.setVisible(true);
-                  showInfo(type, index);
-                });
-              yPanel.getChildren().add(itemTemplate);
-              
+            // Carregar la llista amb les dades
+            for (int i = 0; i < dades.length(); i++) {
+                JSONObject consoleObject = dades.getJSONObject(i);
+
+                if (consoleObject.has("nom")) {
+                    
+                    String nom = consoleObject.getString("nom");
+                    
+                    String imatge = "assets/images/" + consoleObject.getString("imatge");
+                
+                    FXMLLoader loader = new FXMLLoader(resource);
+                    Parent itemTemplate = loader.load();
+                    ControllerListItem itemController = loader.getController();
+                    itemController.setText(nom);
+                    itemController.setImage(imatge);
+                    
+                    // Defineix el callback que s'executarà quan l'usuari seleccioni un element
+                    // (cal passar final perquè es pugui accedir des del callback)
+                    final int index = i;
+                      itemTemplate.setOnMouseClicked(event -> {
+                        titul.setText(nom);
+                        info.setVisible(true);
+                        showInfo(type, index);
+                      });
+                    yPanel.getChildren().add(itemTemplate);
+                    
+                }
+
+              }
+          } catch (Exception e) {
+            System.out.println("ControllerDesktop: Error showing list.");
           }
-
         }
+      });
+      // Obtenir les dades de l'opció seleccionada
+
+
+      
+      
 
      }
 

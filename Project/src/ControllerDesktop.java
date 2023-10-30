@@ -70,7 +70,11 @@ public void loadList() {
     AppData appData = AppData.getInstance();
 
     // Obtenir les dades de l'opció seleccionada
-    JSONArray dades = appData.getData(opcioSeleccionada);
+    
+    JSONArray dades = appData.getData("Personatges");
+     dades = appData.getData("Jocs");
+     dades = appData.getData("Consoles");
+     dades = appData.getData(opcioSeleccionada);
     // Carregar la plantilla
     URL resource = this.getClass().getResource("assets/template_list_item.fxml");
 
